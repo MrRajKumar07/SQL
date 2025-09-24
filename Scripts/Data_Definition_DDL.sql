@@ -66,10 +66,10 @@ TRUNCATE table employee;
 =============================================================================== */
 
 --Rename the table employee to staff
-rename table employee to staff;
+RENAME TABLE employee to staff;
 
 --Rename the table satff to employee
-rename table staff to employee;
+RENAME table staff to employee;
 
 
 /* ============================================================================== 
