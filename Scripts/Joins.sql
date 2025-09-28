@@ -197,3 +197,44 @@ CROSS JOIN orders;
 +----------+
 |       30 |
 +----------+
+
+/* ============================================================================== 
+   MULTIPLE TABLE JOINS (4 Tables)
+=============================================================================== */
+
+use salesdb;
+
+--Show all orders along with the customer name and product name.
+ SELECT
+      o.orderid,
+      o.orderdate,
+      c.firstname AS customer_firstname,
+      c.lastname AS customer_lastname,
+      p.product AS product_name,
+      o.quantity,
+      o.sales
+FROM orders o
+LEFT JOIN customers c ON o.customerid = c.customerid
+LEFT JOIN products p ON o.productid = p.productid;
+
+/* Task: Using SalesDB, Retrieve a list of all orders, along with the related customer, product, 
+   and employee details. For each order, display:
+   - Order ID
+   - Customer's name
+   - Product name
+   - Sales amount
+   - Product price
+   - Salesperson's name */
+
+SELECT 
+    o.orderid,
+    c.firstname AS Customer_Firstname,
+    c.lastname AS Customer_Lastname,
+    p.product AS Product_Name,
+    p.price AS Product_Price,
+    e.firstname AS Employee_Firstname,
+    e.lastname AS Employee_Lastname
+FROM orders o
+LEFT JOIN customers c ON o.customerid = c.customerid
+LEFT JOIN products p ON o.productid = p.productid
+LEFT JOIN employees e ON o.salespersonid = e.employeeid;
