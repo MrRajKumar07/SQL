@@ -137,3 +137,6 @@ where country like'%n%';
 select * 
 from customers 
 where country like'__r%';
+
+
+
