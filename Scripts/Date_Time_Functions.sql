@@ -1,0 +1,193 @@
+/* ==============================================================================
+   SQL Date & Time Functions
+-------------------------------------------------------------------------------
+   This script demonstrates various date and time functions in SQL.
+   It covers functions such as GETDATE, DATETRUNC, DATENAME, DATEPART,
+   YEAR, MONTH, DAY, EOMONTH, FORMAT, CONVERT, CAST, DATEADD, DATEDIFF,
+   and ISDATE.
+   
+   Table of Contents:
+    1. GETDATE() → MariaDB: NOW() or CURDATE()
+    2. DATETRUNC() → MariaDB: DATE_FORMAT() or custom expressions
+    3. DATENAME() → MariaDB: MONTHNAME() / DAYNAME()
+    4. DATEPART() → MariaDB: EXTRACT() or YEAR()/MONTH()/DAY()
+    5. EOMONTH() → MariaDB: LAST_DAY()
+    6. FORMAT() → MariaDB: DATE_FORMAT()
+    7. CONVERT() / CAST() → MariaDB supports similar CAST(); CONVERT(expr, type)
+    8. DATEADD() → MariaDB: DATE_ADD()
+    9. DATEDIFF() → MariaDB: DATEDIFF() (only days)
+   10. ISDATE() → MariaDB: STR_TO_DATE() check
+===============================================================================
+*/
+
+/* ==============================================================================
+   GETDATE() / NOW()/ CURDATE()
+===============================================================================*/
+
+--Return Current Date with time in ISO Standard
+SELECT NOW();
+
+--Return Current date 
+SELECT CURDATE();
+SELECT DATE(NOW());
+
+/* TASK 1:
+   Display OrderID, CreationTime, a hard-coded date, and the current system date.
+*/
+SELECT orderid, 
+    creationtime,
+    '2025-10-12' AS HardCoded,
+    curdate() AS CurrentDate 
+FROM orders;
+
+/* ==============================================================================
+   DATE PART EXTRACTIONS IN SQL SERVER
+   (DATETRUNC, DATENAME, DATEPART, YEAR, MONTH, DAY)
+===============================================================================*/
+
+--Return day of the Month
+SELECT DAY('2025-10-11');
+
+--Return Month of the year
+SELECT MONTH('2025-10-11');
+
+--Return Year
+SELECT YEAR('2025-10-11');
+
+/* TASK 2:
+   Extract various parts of CreationTime using YEAR, MONTH, and DAY.
+*/
+SELECT DATE(creationtime),
+    creationtime,
+    DAY(creationtime) AS Day,
+    MONTH(creationtime) AS Month
+    YEAR(creationtime) AS Year
+From orders;
+
+/* TASK 3:
+   Extract various parts of CreationTime using DATETRUNC, DATENAME, DATEPART,
+   YEAR, MONTH, and DAY.
+*/
+SELECT
+    OrderID,
+    CreationTime,
+    -- DATETRUNC Examples
+    DATETRUNC(year, CreationTime) AS Year_dt,
+    DATETRUNC(day, CreationTime) AS Day_dt,
+    DATETRUNC(minute, CreationTime) AS Minute_dt,
+    -- DATENAME Examples
+    DATENAME(month, CreationTime) AS Month_dn,
+    DATENAME(weekday, CreationTime) AS Weekday_dn,
+    DATENAME(day, CreationTime) AS Day_dn,
+    DATENAME(year, CreationTime) AS Year_dn,
+    -- DATEPART Examples
+    DATEPART(year, CreationTime) AS Year_dp,
+    DATEPART(month, CreationTime) AS Month_dp,
+    DATEPART(day, CreationTime) AS Day_dp,
+    DATEPART(hour, CreationTime) AS Hour_dp,
+    DATEPART(quarter, CreationTime) AS Quarter_dp,
+    DATEPART(week, CreationTime) AS Week_dp,
+    YEAR(CreationTime) AS Year,
+    MONTH(CreationTime) AS Month,
+    DAY(CreationTime) AS Day
+From orders;
+
+/* ==============================================================================
+   DATE PART EXTRACTIONS IN MARIADB
+   (DATE_FORMAT, MONTHNAME/DAYNAME, EXTRACT, YEAR, MONTH, DAY)
+===============================================================================*/
+
+--Return Year
+SELECT EXTRACT(YEAR FROM '2025-10-12');
+
+--Return Month
+SELECT EXTRACT(MONTH FROM '2025-10-12');
+
+--Return Day
+SELECT EXTRACT(DAY FROM '2025-10-12');
+
+--Return Week Day
+SELECT EXTRACT(WEEK FROM '2025-10-12');
+
+--Return Quarter of a Year
+SELECT EXTRACT(QUARTER FROM '2025-10-12');
+
+--Return Number of days Of a Year
+SELECT DAYOFYEAR ('2025-10-12');
+
+--Return Month Name 
+SELECT MONTHNAME('2025-10-12');
+
+--Return Day Name
+SELECT DAYNAME('2025-10-12');
+
+--Return Current Date till Minutes
+SELECT DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:00') AS Minute_dt;
+
+/* TASK 4:
+   Extract various parts of CreationTime using DATE_FORMAT, MONTHNAME/DAYNAME, EXTRACT,
+   YEAR, MONTH, and DAY.
+*/
+SELECT
+    orderid,
+    creationtime,
+    -- DATE_FORMAT Examples
+    DATE_FORMAT(creationtime,'%Y-%m-%d %H:%i:00') AS Minute_df,
+    DATE_FORMAT(creationtime,'%Y-%m-%d %H:00:00') AS Hour_df,
+    DATE_FORMAT(creationtime,'%Y-%m-01 00:00:00') AS Month_df,
+    DATE_FORMAT(creationtime,'%Y-01-01 00:00:00') AS Year_df,
+    -- MONTHNAME / DAYNAME Examples
+    MONTHNAME(creationtime) AS MM_Month,
+    DAYNAME(creationtime) AS dd_Day,
+    -- EXTRACT Examples
+    EXTRACT(YEAR FROM creationtime) AS Ext_Year,
+    EXTRACT(MONTH FROM creationtime) AS Ext_Month,
+    EXTRACT(DAY FROM creationtime) AS Ext_Day,
+    EXTRACT(QUARTER FROM creationtime) AS Ext_Quarter,
+    EXTRACT(WEEK FROM creationtime) AS Ext_Week,
+    -- Direct Functions
+    YEAR(creationtime) AS Year,
+    MONTH(creationtime) AS Month,
+    DAY(creationtime) AS Day
+FROM ORDERS;
+
+/* ==============================================================================
+   DATETRUNC()/DATE_FORMAT DATA AGGREGATION
+===============================================================================*/
+
+/* TASK 3:
+   Aggregate orders by year using DATETRUNC/DATE_FORMAT(Used in MariaDB) on CreationTime.
+*/
+SELECT 
+    DATE_FORMAT(creationtime,'%Y-01-01 00:00:00') AS Creation ,
+    count(*) As OrderCount 
+    FROM orders 
+    GROUP BY DATE_FORMAT(creationtime,'%Y-01-01 00:00:00');
+
+SELECT 
+    DATETRUNC(year,creationtime) AS Creation ,
+    count(*) As OrderCount 
+    FROM orders 
+    GROUP BY DATETRUNC(year,creationtime) AS Creation;
+
+/* ==============================================================================
+   EOMONTH()/LAST_DAY()
+===============================================================================*/
+
+--Return last Date
+SELECT LAST_DAY('2025-10-12');
+
+/* TASK 4:
+   Display OrderID, CreationTime, and the end-of-month date for CreationTime.
+*/
+SELECT 
+    orderid,
+    creationtime,
+    LAST_DAY(creationtime) AS EndDate
+FROM orders;
+
+SELECT
+    OrderID,
+    CreationTime,
+    EOMONTH(CreationTime) AS EndOfMonth
+FROM Orders;
