@@ -238,7 +238,7 @@ SELECT
 ===============================================================================*/
 
 /* TASK 11:
-   Format CreationTime into various string representations.
+   Format CreationTime into various string representations Using SQL Server.
 */
 SELECT
     OrderID,
@@ -252,3 +252,28 @@ SELECT
     FORMAT(CreationTime, 'MMM') AS MMM,
     FORMAT(CreationTime, 'MMMM') AS MMMM
 FROM Sales.Orders;
+
+/* TASK 11:
+   Format CreationTime into various string representations Using MariaDB.
+*/
+
+SELECT
+    orderid,
+    creationtime,
+    -- USA Format (MM-dd-yyyy)
+    DATE_FORMAT(creationtime, '%m-%d-%Y') AS USA_Format,
+    -- EURO Format (dd-MM-yyyy)
+    DATE_FORMAT(creationtime, '%d-%m-%Y') AS EURO_Format,
+    -- Day number (01-31)
+    DATE_FORMAT(creationtime, '%d') AS dd,
+    -- Abbreviated weekday (Mon, Tue, Wed...)
+    DATE_FORMAT(creationtime, '%a') AS ddd,
+    -- Full weekday (Monday, Tuesday...)
+    DATE_FORMAT(creationtime, '%W') AS dddd,
+    -- Month number (01-12)
+    DATE_FORMAT(creationtime, '%m') AS MM,
+    -- Abbreviated month (Jan, Feb...)
+    DATE_FORMAT(creationtime, '%b') AS MMM,
+    -- Full month (January, February...)
+    DATE_FORMAT(creationtime, '%M') AS MMMM
+FROM orders;
