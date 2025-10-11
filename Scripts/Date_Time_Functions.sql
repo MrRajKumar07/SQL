@@ -277,3 +277,5 @@ SELECT
     -- Full month (January, February...)
     DATE_FORMAT(creationtime, '%M') AS MMMM
 FROM orders;
+
+
