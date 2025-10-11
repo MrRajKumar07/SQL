@@ -155,7 +155,7 @@ FROM ORDERS;
    DATETRUNC()/DATE_FORMAT DATA AGGREGATION
 ===============================================================================*/
 
-/* TASK 3:
+/* TASK 5:
    Aggregate orders by year using DATETRUNC/DATE_FORMAT(Used in MariaDB) on CreationTime.
 */
 SELECT 
@@ -177,7 +177,7 @@ SELECT
 --Return last Date
 SELECT LAST_DAY('2025-10-12');
 
-/* TASK 4:
+/* TASK 6:
    Display OrderID, CreationTime, and the end-of-month date for CreationTime.
 */
 SELECT 
@@ -191,3 +191,64 @@ SELECT
     CreationTime,
     EOMONTH(CreationTime) AS EndOfMonth
 FROM Orders;
+
+/* ==============================================================================
+   DATE PARTS | USE CASES
+===============================================================================*/
+
+/* TASK 7:
+   How many orders were placed each year?
+*/
+SELECT 
+    YEAR(orderdate) AS Year,
+    COUNT(*) AS CountOrders 
+    FROM orders 
+    GROUP BY YEAR(orderdate);
+
+/* TASK 8:
+   How many orders were placed each month?
+*/    
+
+SELECT 
+    MONTH(orderdate) AS Month,
+    COUNT(*) AS CountOrders 
+    FROM orders 
+    GROUP BY MONTH(orderdate);
+
+/* TASK 9:
+   How many orders were placed each month (using friendly month names)?
+*/
+
+SELECT 
+    MONTHNAME(orderdate) AS MM_Name,
+    COUNT(*) AS OrderCount 
+    FROM orders 
+    GROUP BY MONTHNAME(orderdate);
+
+/* TASK 10:
+   Show all orders that were placed during the month of February.
+*/
+
+ SELECT * 
+    FROM orders 
+    WHERE MONTH(orderdate)=2;
+
+/* ==============================================================================
+   FORMAT()/DATE_FORMAT()
+===============================================================================*/
+
+/* TASK 11:
+   Format CreationTime into various string representations.
+*/
+SELECT
+    OrderID,
+    CreationTime,
+    FORMAT(CreationTime, 'MM-dd-yyyy') AS USA_Format,
+    FORMAT(CreationTime, 'dd-MM-yyyy') AS EURO_Format,
+    FORMAT(CreationTime, 'dd') AS dd,
+    FORMAT(CreationTime, 'ddd') AS ddd,
+    FORMAT(CreationTime, 'dddd') AS dddd,
+    FORMAT(CreationTime, 'MM') AS MM,
+    FORMAT(CreationTime, 'MMM') AS MMM,
+    FORMAT(CreationTime, 'MMMM') AS MMMM
+FROM Sales.Orders;
