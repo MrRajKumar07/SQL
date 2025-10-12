@@ -161,4 +161,3 @@ INSERT INTO `orders_archive` (
   (6, 104, 3, 5, '2024-05-05', '2024-05-10', 'Delivered', '77 Belmont Rd, Kolkata', '92 Door Way, Lucknow', 2, 50, '2024-05-07 13:22:05'),
   (6, 101, 3, 5, '2024-05-05', '2024-05-10', 'Delivered', '77 Belmont Rd, Kolkata', '92 Door Way, Lucknow', 2, 50, '2024-05-12 20:36:55'),
   (7, 102, 3, 5, '2024-06-15', '2024-06-20', 'Shipped', '111 MG Road, Jaipur', '222 Gandhi St, Jaipur', 0, 60, '2024-06-16 23:25:15');
-
