@@ -459,3 +459,5 @@ FROM Sales.Orders;
     LAG(orderdate) OVER (ORDER BY orderdate) AS PreviousOrderDate,
     DATEDIFF(orderdate,LAG(orderdate) OVER (ORDER BY orderdate))AS NrOfDate 
  FROM orders;
+
+ 
