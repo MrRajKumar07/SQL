@@ -253,7 +253,7 @@ SELECT
     FORMAT(CreationTime, 'MMMM') AS MMMM
 FROM Sales.Orders;
 
-/* TASK 11:
+/* TASK 12:
    Format CreationTime into various string representations Using MariaDB.
 */
 
@@ -278,4 +278,184 @@ SELECT
     DATE_FORMAT(creationtime, '%M') AS MMMM
 FROM orders;
 
+/* TASK 13:
+   Display CreationTime using a custom format Using MariaDB:
+   Example: Day Wed Jan Q1 2025 12:34:56 PM
+*/
+SELECT 
+    orderid,
+    creationtime, 
+    CONCAT('Day ', DATE_FORMAT(creationtime,'%a %b'),
+    ' Q',EXTRACT(QUARTER FROM creationtime),' ',
+    YEAR(creationtime),' ',
+    DATE_FORMAT(creationtime,'%h:%i:%s %p' )) AS CustomDate 
+FROM orders;
 
+/* TASK 14:
+   Display CreationTime using a custom format Using SQL Server:
+   Example: Day Wed Jan Q1 2025 12:34:56 PM
+*/
+SELECT
+    OrderID,
+    CreationTime,
+    'Day ' + FORMAT(CreationTime, 'ddd MMM') +
+    ' Q' + DATENAME(quarter, CreationTime) + ' ' +
+    FORMAT(CreationTime, 'yyyy hh:mm:ss tt') AS CustomFormat
+FROM Orders;
+
+/* TASK 15:
+   How many orders were placed each year, formatted by month and year (e.g., "Jan 25") Using MariaDB?
+*/
+
+SELECT 
+    orderid,
+    orderdate,
+    COUNT(*) AS CountOrders,
+    DATE_FORMAT(orderdate,'%b %y')AS Order_Df 
+FROM orders 
+GROUP BY DATE_FORMAT(orderdate,'%b %y');
+
+/* TASK 16:
+   How many orders were placed each year, formatted by month and year (e.g., "Jan 25") Using SQL Server?
+*/
+SELECT
+    FORMAT(CreationTime, 'MMM yy') AS OrderDate,
+    COUNT(*) AS TotalOrders
+FROM Sales.Orders
+GROUP BY FORMAT(CreationTime, 'MMM yy');
+
+/* ==============================================================================
+   CONVERT()
+===============================================================================*/
+
+/* TASK 17:
+   Demonstrate conversion using CONVERT.
+*/
+SELECT
+    CONVERT(INT, '123') AS [String to Int CONVERT],
+    CONVERT(DATE, '2025-08-20') AS [String to Date CONVERT],
+    CreationTime,
+    CONVERT(DATE, CreationTime) AS [Datetime to Date CONVERT],
+    CONVERT(VARCHAR, CreationTime, 32) AS [USA Std. Style:32],
+    CONVERT(VARCHAR, CreationTime, 34) AS [EURO Std. Style:34]
+FROM Sales.Orders;
+
+/* ==============================================================================
+   CAST()
+===============================================================================*/
+
+/* TASK 18:
+   Convert data types using CAST in SQL Server.
+*/
+SELECT
+    CAST('123' AS INT) AS [String to Int],
+    CAST(123 AS VARCHAR) AS [Int to String],
+    CAST('2025-08-20' AS DATE) AS [String to Date],
+    CAST('2025-08-20' AS DATETIME2) AS [String to Datetime],
+    CreationTime,
+    CAST(CreationTime AS DATE) AS [Datetime to Date]
+FROM Sales.Orders;
+
+/* TASK 19:
+   Convert data types using CAST in MariaDB.
+*/
+SELECT 
+    orderid,
+    orderdate, 
+    CAST('123'AS SIGNED) AS StringToInt,
+    CAST('2025-10-12' AS DATE) AS New_Date,
+    creationtime,
+    CAST(creationtime AS DATE)AS Casted_Date,
+    DATE_FORMAT(creationtime, '%d-%m-%Y %h:%i:%s')AS Euro_Std_Date,
+    DATE_FORMAT(creationtime,'%m-%d-%Y %h:%i:%s')AS USA_Std_Date 
+FROM orders;
+
+/* ==============================================================================
+   DATEADD() / DATEDIFF() / DATE_ADD() / DATE_DIFF()  
+===============================================================================*/
+
+--Return Date +2year in MariaDB
+SELECT DATE_ADD('2025-10-12', INTERVAL 2 YEAR);
+
+--Return Date -2year in MariaDB
+SELECT DATE_SUB('2025-10-12', INTERVAL 2 YEAR);
+
+/* TASK 20:
+   Perform date arithmetic on OrderDate Using SQL Server.
+*/
+SELECT
+    OrderID,
+    OrderDate,
+    DATEADD(day, -10, OrderDate) AS TenDaysBefore,
+    DATEADD(month, 3, OrderDate) AS ThreeMonthsLater,
+    DATEADD(year, 2, OrderDate) AS TwoYearsLater
+FROM Sales.Orders;
+
+/* TASK 21:
+   Perform date arithmetic on OrderDate Using MariaDB.
+*/
+SELECT 
+    orderid,
+    orderdate,
+    DATE_ADD(orderdate,INTERVAL 10 MONTH) AS TenMonthLater,
+    DATE_SUB(orderdate,INTERVAL 20 DAY) AS TwentyDaysBefore,
+    DATE_ADD(orderdate,INTERVAL 2 YEAR) AS TwoYearLater 
+FROM orders;
+
+/* TASK 22:
+   Calculate the age of employees Using SQL Server.
+*/
+SELECT
+    EmployeeID,
+    BirthDate,
+    DATEDIFF(year, BirthDate, GETDATE()) AS Age
+FROM Sales.Employees;
+
+/* TASK 23:
+   Calculate the age of employees Using MariaDB.
+*/
+SELECT 
+    employeeid,
+    birthdate,
+    FLOOR(DATEDIFF(CURDATE(),birthdate)/365) AS age 
+FROM employees;
+
+/* TASK 24:
+   Find the average shipping duration in days for each month Using SQL Server.
+*/
+SELECT
+    MONTH(OrderDate) AS OrderMonth,
+    AVG(DATEDIFF(day, OrderDate, ShipDate)) AS AvgShip
+FROM Sales.Orders
+GROUP BY MONTH(OrderDate);
+
+/* TASK 24:
+   Find the average shipping duration in days for each month Using MariaDB.
+*/
+SELECT 
+    orderid,
+    orderdate,
+    shipdate,
+    AVG(DATEDIFF(shipdate,orderdate)) AS Duration 
+FROM orders 
+GROUP BY MONTH(orderdate);
+
+/* TASK 25:
+   Time Gap Analysis: Find the number of days between each order and the previous order in SQL Server.
+*/
+SELECT
+    OrderID,
+    OrderDate AS CurrentOrderDate,
+    LAG(OrderDate) OVER (ORDER BY OrderDate) AS PreviousOrderDate,
+    DATEDIFF(day, LAG(OrderDate) OVER (ORDER BY OrderDate), OrderDate) AS NrOfDays
+FROM Sales.Orders;
+
+/* TASK 25:
+   Time Gap Analysis: Find the number of days between each order and the previous order in MariaDB.
+*/
+ SELECT 
+    orderid,
+    orderdate,
+    LAG(orderdate) OVER (ORDER BY orderdate) AS PreviousOrderDate,
+    DATEDIFF(orderdate,LAG(orderdate) OVER (ORDER BY orderdate))AS NrOfDate 
+ FROM orders;
