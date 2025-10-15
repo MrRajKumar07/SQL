@@ -166,3 +166,4 @@ WITH Orders AS (
     NULLIF(TRIM(Category),'') AS Policy2, 
     COALESCE(NULLIF(TRIM(Category),''),'Unkonwn') AS Policy3 
 FROM ORDERS;
+
