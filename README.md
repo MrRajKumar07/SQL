@@ -1,2 +1,2 @@
 # SQL
-A Collection Of Full Sql Databases.
+A Collection Of Full SQL Databases.
