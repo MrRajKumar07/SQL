@@ -36,20 +36,20 @@ FROM orders;
    The results are sorted from highest to lowest total sales.
 */
 SELECT
-    Category,
-    SUM(Sales) AS TotalSales
+    category,
+    SUM(sales) AS TotalSales
 FROM (
     SELECT
-        OrderID,
-        Sales,
+        orderid,
+        sales,
         CASE
             WHEN Sales > 50 THEN 'High'
             WHEN Sales > 20 THEN 'Medium'
             ELSE 'Low'
-        END AS Category
-    FROM Sales.Orders
+        END AS category
+    FROM orders
 ) AS t
-GROUP BY Category
+GROUP BY category
 ORDER BY TotalSales DESC;
 
 /* ==============================================================================
@@ -71,16 +71,16 @@ FROM employees;
    Retrieve customer details with abbreviated country codes 
 */
 SELECT
-    CustomerID,
-    FirstName,
-    LastName,
-    Country,
+    customerid,
+    firstname,
+    lastname,
+    country,
     CASE 
-        WHEN Country = 'Germany' THEN 'DE'
-        WHEN Country = 'USA'     THEN 'US'
+        WHEN country = 'Germany' THEN 'DE'
+        WHEN country = 'USA'     THEN 'US'
         ELSE 'n/a'
     END AS CountryAbbr
-FROM Sales.Customers;
+FROM customers;
 
 /* ==============================================================================
    QUICK FORM SYNTAX
@@ -90,21 +90,21 @@ FROM Sales.Customers;
    Retrieve customer details with abbreviated country codes using quick form 
 */
 SELECT
-    CustomerID,
-    FirstName,
-    LastName,
-    Country,
+    customerid,
+    firstname,
+    lastname,
+    country,
     CASE 
-        WHEN Country = 'Germany' THEN 'DE'
-        WHEN Country = 'USA'     THEN 'US'
+        WHEN country = 'Germany' THEN 'DE'
+        WHEN country = 'USA'     THEN 'US'
         ELSE 'n/a'
     END AS CountryAbbr,
-    CASE Country
+    CASE country
         WHEN 'Germany' THEN 'DE'
         WHEN 'USA'     THEN 'US'
         ELSE 'n/a'
     END AS CountryAbbr2
-FROM Sales.Customers;
+FROM customers;
 
 /* ==============================================================================
    HANDLING NULLS
@@ -115,21 +115,21 @@ FROM Sales.Customers;
    and provide CustomerID and LastName details.
 */
 SELECT
-    CustomerID,
-    LastName,
-    Score,
+    customerid,
+    lastname,
+    score,
     CASE
-        WHEN Score IS NULL THEN 0
-        ELSE Score
+        WHEN score IS NULL THEN 0
+        ELSE score
     END AS ScoreClean,
     AVG(
         CASE
-            WHEN Score IS NULL THEN 0
-            ELSE Score
+            WHEN score IS NULL THEN 0
+            ELSE score
         END
     ) OVER () AS AvgCustomerClean,
-    AVG(Score) OVER () AS AvgCustomer
-FROM Sales.Customers;
+    AVG(score) OVER () AS AvgCustomer
+FROM customers;
 
 /* ==============================================================================
    CONDITIONAL AGGREGATION
@@ -139,13 +139,13 @@ FROM Sales.Customers;
    Count how many orders each customer made with sales greater than 30 
 */
 SELECT
-    CustomerID,
+    customerid,
     SUM(
         CASE
             WHEN Sales > 30 THEN 1
             ELSE 0
         END
     ) AS TotalOrdersHighSales,
-    COUNT(*) AS TotalOrders
-FROM Sales.Orders
-GROUP BY CustomerID;
+    COUNT(*) AS total_orders
+FROM orders
+GROUP BY customerid;
